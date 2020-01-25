@@ -19,7 +19,7 @@ golang-config-file-managed-environ_file:
                  )
               }}
     - mode: 644
-    - user: root
+    - user: {{ golang.rootuser }}
     - group: {{ golang.rootgroup }}
     - makedirs: True
     - template: jinja
@@ -36,11 +36,11 @@ golang-config-file-managed-environ_file:
 golang-config-file-symlink-{{ i }}-golang-binary:
   file.symlink:
     - name: /usr/local/bin/{{ i }}
-    - target: {{ golang.base_dir }}/ {{ i }}
+    - target: {{ golang.linux.base_dir }}/ {{ i }}
     - mode: '0755'
     - force: True
     - onlyif:
       - {{ grains.os_family in ('Arch', 'FreeBSD', 'MacOS') }}
-      - test -x {{ golang.base_dir }}/ {{ i }}
+      - test -x {{ golang.linux.base_dir }}/ {{ i }}
 
     {%- endfor %}

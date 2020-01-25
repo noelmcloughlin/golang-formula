@@ -31,6 +31,8 @@ If you are interested in writing or contributing to formulas, please pay attenti
 If you want to use this formula, please pay attention to the ``FORMULA`` file and/or ``git tag``,
 which contains the currently released version. This formula is versioned according to `Semantic Versioning <http://semver.org/>`_.
 
+If you need (non-default) configuration, please pay attention to the ``pillar.example`` file and/or `Special notes`_ section.
+
 See `Formula Versioning Section <https://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html#versioning>`_ for more details.
 
 Contributing to this repo
@@ -38,7 +40,12 @@ Contributing to this repo
 
 **Commit message formatting is significant!!**
 
-Please see :ref:`How to contribute <CONTRIBUTING>` for more details.
+Please see `How to contribute <https://github.com/saltstack-formulas/.github/blob/master/CONTRIBUTING.rst>`_ for more details.
+
+Special notes
+-------------
+
+This formula uses (non-default) GOPATH environment variable on Unix by default; see ``go_path`` key in ``defaults.yaml`` and ``pillar.example`` files. Normally GOPATH defaults to ``$HOME/go`` on Unix/Darwin, ``$home/go`` on Plan9, and ``%USERPROFILE%\go`` on Windows; another common setup is ``GOPATH=$HOME && export PATH=$PATH:$(go env GOPATH)/bin`` too.
 
 Available states
 ----------------
@@ -71,6 +78,22 @@ via include list.
 
 This state will start the golang service and has a dependency on ``golang.config``
 via include list.
+
+``golang.cmd``
+^^^^^^^^^^^^^^
+
+This is a metastate for go command tasks.
+
+``golang.cmd.clean``
+^^^^^^^^^^^^^^^^^^^^
+
+This state runs ``go clean -i <item>...`` for each item in ``cmd.clean`` dict.
+
+``golang.cmd.goget``
+^^^^^^^^^^^^^^^^^^^^
+
+This state runs ``go get <item>...`` for each item in ``cmd.get`` dict.
+
 
 ``golang.clean``
 ^^^^^^^^^^^^^^^^

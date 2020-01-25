@@ -11,64 +11,103 @@ driver:
 # Make sure the platforms listed below match up with
 # the `env.matrix` instances defined in `.travis.yml`
 platforms:
-  ## SALT `develop`
-  - name: debian-9-develop-py3
+  ## SALT `master`
+  - name: debian-10-master-py3
     driver:
-      image: netmanagers/salt-develop-py3:debian-9
+      image: netmanagers/salt-master-py3:debian-10
       provision_command:
         - curl -o bootstrap-salt.sh -L https://bootstrap.saltstack.com
-        - sh bootstrap-salt.sh -XdPbfrq -x python3 git develop
+        - sh bootstrap-salt.sh -XdPbfrq -x python3 git master
         # https://github.com/saltstack/salt/issues/39314
         - apt-get remove python-boto3 -y
-  - name: ubuntu-1804-develop-py3
+  - name: ubuntu-1804-master-py3
     driver:
-      image: netmanagers/salt-develop-py3:ubuntu-18.04
+      image: netmanagers/salt-master-py3:ubuntu-18.04
       provision_command:
         - curl -o bootstrap-salt.sh -L https://bootstrap.saltstack.com
-        - sh bootstrap-salt.sh -XdPbfrq -x python3 git develop
+        - sh bootstrap-salt.sh -XdPbfrq -x python3 git master
         # https://github.com/saltstack/salt/issues/39314
         - apt-get remove python-boto3 -y
-  - name: centos-7-develop-py3
+  - name: centos-8-master-py3
     driver:
-      image: netmanagers/salt-develop-py3:centos-7
+      image: netmanagers/salt-master-py3:centos-8
       provision_command:
         - curl -o bootstrap-salt.sh -L https://bootstrap.saltstack.com
-        - sh bootstrap-salt.sh -XdPbfrq -x python3 git develop
-  - name: fedora-29-develop-py3
+        - sh bootstrap-salt.sh -XdPbfrq -x python3 git master
+  - name: fedora-31-master-py3
     driver:
-      image: netmanagers/salt-develop-py3:fedora-29
+      image: netmanagers/salt-master-py3:fedora-31
       provision_command:
         - curl -o bootstrap-salt.sh -L https://bootstrap.saltstack.com
-        - sh bootstrap-salt.sh -XdPbfrq -x python3 git develop
-  - name: opensuse-leap-15-develop-py3
+        - sh bootstrap-salt.sh -XdPbfrq -x python3 git master
+  - name: opensuse-leap-151-master-py3
     driver:
-      image: netmanagers/salt-develop-py3:opensuse-leap-15
+      image: netmanagers/salt-master-py3:opensuse-leap-15.1
       provision_command:
         - curl -o bootstrap-salt.sh -L https://bootstrap.saltstack.com
-        - sh bootstrap-salt.sh -XdPbfrq -x python3 git develop
+        - sh bootstrap-salt.sh -XdPbfrq -x python3 git master
         # https://github.com/saltstack/salt/issues/39314
         - zypper rm python-boto3 -y
       run_command: /usr/lib/systemd/systemd
+    # Workaround to avoid intermittent failures on `opensuse-leap-15.1`:
+    # => SCP did not finish successfully (255):  (Net::SCP::Error)
+    transport:
+      max_ssh_sessions: 1
+  # Use the `develop` image temporarily until the `master` image is available
+  # Not changing the name to minimise disruption across all of the formulas
+  - name: amazonlinux-2-master-py2
+    driver:
+      image: netmanagers/salt-develop-py2:amazonlinux-2
+      provision_command:
+        - curl -o bootstrap-salt.sh -L https://bootstrap.saltstack.com
+        - sh bootstrap-salt.sh -XdPbfrq -x python2 git develop
+  - name: arch-base-latest-master-py2
+    driver:
+      image: netmanagers/salt-master-py2:arch-base-latest
+      provision_command:
+        - curl -o bootstrap-salt.sh -L https://bootstrap.saltstack.com
+        - sh bootstrap-salt.sh -XdPbfrq -x python2 git master
+      run_command: /usr/lib/systemd/systemd
 
   ## SALT `2019.2`
+  - name: debian-10-2019-2-py3
+    driver:
+      image: netmanagers/salt-2019.2-py3:debian-10
   - name: debian-9-2019-2-py3
     driver:
       image: netmanagers/salt-2019.2-py3:debian-9
   - name: ubuntu-1804-2019-2-py3
     driver:
       image: netmanagers/salt-2019.2-py3:ubuntu-18.04
-  - name: centos-7-2019-2-py3
+  - name: centos-8-2019-2-py3
     driver:
-      image: netmanagers/salt-2019.2-py3:centos-7
-  - name: fedora-29-2019-2-py3
+      image: netmanagers/salt-2019.2-py3:centos-8
+  - name: fedora-31-2019-2-py3
     driver:
-      image: netmanagers/salt-2019.2-py3:fedora-29
-  - name: opensuse-leap-15-2019-2-py3
+      image: netmanagers/salt-2019.2-py3:fedora-31
+  - name: opensuse-leap-151-2019-2-py3
     driver:
-      image: netmanagers/salt-2019.2-py3:opensuse-leap-15
+      image: netmanagers/salt-2019.2-py3:opensuse-leap-15.1
+      run_command: /usr/lib/systemd/systemd
+    # Workaround to avoid intermittent failures on `opensuse-leap-15.1`:
+    # => SCP did not finish successfully (255):  (Net::SCP::Error)
+    transport:
+      max_ssh_sessions: 1
+  - name: centos-7-2019-2-py2
+    driver:
+      image: netmanagers/salt-2019.2-py2:centos-7
+  - name: amazonlinux-2-2019-2-py2
+    driver:
+      image: netmanagers/salt-2019.2-py2:amazonlinux-2
+  - name: arch-base-latest-2019-2-py2
+    driver:
+      image: netmanagers/salt-2019.2-py2:arch-base-latest
       run_command: /usr/lib/systemd/systemd
 
   ## SALT `2018.3`
+  - name: fedora-30-2018-3-py3
+    driver:
+      image: netmanagers/salt-2018.3-py3:fedora-30
   - name: debian-9-2018-3-py2
     driver:
       image: netmanagers/salt-2018.3-py2:debian-9
@@ -78,12 +117,20 @@ platforms:
   - name: centos-7-2018-3-py2
     driver:
       image: netmanagers/salt-2018.3-py2:centos-7
-  - name: fedora-29-2018-3-py2
+  - name: opensuse-leap-151-2018-3-py2
     driver:
-      image: netmanagers/salt-2018.3-py2:fedora-29
-  - name: opensuse-leap-42-2018-3-py2
+      image: netmanagers/salt-2018.3-py2:opensuse-leap-15.1
+      run_command: /usr/lib/systemd/systemd
+    # Workaround to avoid intermittent failures on `opensuse-leap-15.1`:
+    # => SCP did not finish successfully (255):  (Net::SCP::Error)
+    transport:
+      max_ssh_sessions: 1
+  - name: amazonlinux-2-2018-3-py2
     driver:
-      image: netmanagers/salt-2018.3-py2:opensuse-leap-42
+      image: netmanagers/salt-2018.3-py2:amazonlinux-2
+  - name: arch-base-latest-2018-3-py2
+    driver:
+      image: netmanagers/salt-2018.3-py2:arch-base-latest
       run_command: /usr/lib/systemd/systemd
 
   ## SALT `2017.7`
@@ -97,17 +144,28 @@ platforms:
     driver:
       image: netmanagers/salt-2017.7-py2:centos-6
       run_command: /sbin/init
-  - name: fedora-28-2017-7-py2
+  - name: fedora-30-2017-7-py2
     driver:
-      image: netmanagers/salt-2017.7-py2:fedora-28
-  - name: opensuse-leap-42-2017-7-py2
+      image: netmanagers/salt-2017.7-py2:fedora-30
+  - name: opensuse-leap-151-2017-7-py2
     driver:
-      image: netmanagers/salt-2017.7-py2:opensuse-leap-42
+      image: netmanagers/salt-2017.7-py2:opensuse-leap-15.1
+      run_command: /usr/lib/systemd/systemd
+    # Workaround to avoid intermittent failures on `opensuse-leap-15.1`:
+    # => SCP did not finish successfully (255):  (Net::SCP::Error)
+    transport:
+      max_ssh_sessions: 1
+  - name: amazonlinux-2-2017-7-py2
+    driver:
+      image: netmanagers/salt-2017.7-py2:amazonlinux-2
+  - name: arch-base-latest-2017-7-py2
+    driver:
+      image: netmanagers/salt-2017.7-py2:arch-base-latest
       run_command: /usr/lib/systemd/systemd
 
 provisioner:
   name: salt_solo
-  log_level: info
+  log_level: debug
   salt_install: none
   require_chef: false
   formula: golang

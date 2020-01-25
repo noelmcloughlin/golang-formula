@@ -15,7 +15,7 @@ include:
 
 golang-package-archive-install-home-alternative-install:
   cmd.run:
-    - name: update-alternatives --install {{ golang.dir }} golang-home {{ golang.base_dir }}/go {{ golang.linux.altpriority }}
+    - name: update-alternatives --install {{ golang.linux.dir }} golang-home {{ golang.linux.base_dir }}/go {{ golang.linux.altpriority }}
     - watch:
       - archive: golang-package-archive-install-archive-extracted
     - require:
@@ -23,8 +23,8 @@ golang-package-archive-install-home-alternative-install:
     - onlyif: {{ grains.os_family in ('Suse',) }}
   alternatives.install:
     - name: golang-home
-    - link: {{ golang.dir }}
-    - path: {{ golang.base_dir }}/go
+    - link: {{ golang.linux.dir }}
+    - path: {{ golang.linux.base_dir }}/go
     - priority: {{ golang.linux.altpriority }}
     - order: 10
     - watch:
@@ -36,7 +36,7 @@ golang-package-archive-install-home-alternative-install:
 golang-package-archive-install-home-alternative-set:
   alternatives.set:
     - name: golang-home
-    - path: {{ golang.base_dir }}/go
+    - path: {{ golang.linux.base_dir }}/go
     - require:
       - alternatives: golang-package-archive-install-home-alternative-install
     - unless: {{ grains.os_family in ('Suse',) }}
@@ -45,14 +45,14 @@ golang-package-archive-install-home-alternative-set:
 
 golang-package-archive-install-{{ i }}-alternative-install:
   cmd.run:
-    - name: update-alternatives --install /usr/bin/{{i}} link-{{i}} {{ golang.base_dir }}/go/bin/{{i}} {{golang.linux.altpriority}}
+    - name: update-alternatives --install /usr/bin/{{ i }} link-{{ i }} {{ golang.linux.base_dir }}/go/bin/{{ i }} {{ golang.linux.altpriority }}
     - require:
       - cmd: golang-package-archive-install-home-alternative-install
     - onlyif: {{ grains.os_family in ('Suse',) }}
   alternatives.install:
     - name: link-{{ i }}
     - link: /usr/bin/{{ i }}
-    - path: {{ golang.base_dir }}/go/bin/{{ i }}
+    - path: {{ golang.linux.base_dir }}/go/bin/{{ i }}
     - priority: {{ golang.linux.altpriority }}
     - order: 10
     - require:
@@ -62,7 +62,7 @@ golang-package-archive-install-{{ i }}-alternative-install:
 golang-package-archive-install-{{ i }}-alternative-set:
   alternatives.set:
     - name: link-{{ i }}
-    - path: {{ golang.base_dir }}/go/bin/{{ i }}
+    - path: {{ golang.linux.base_dir }}/go/bin/{{ i }}
     - require:
       - alternatives: golang-package-archive-install-{{ i }}-alternative-install
     - unless: {{ grains.os_family in ('Suse',) }}

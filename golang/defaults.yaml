@@ -6,7 +6,7 @@ golang:
   go_path: /usr/local/golang/packages   # non-default GOPATH
   rootuser: root
   rootgroup: root
-  command: go
+  command: go/bin/go
   pkg:
     name: go
     use_upstream_repo: false
